@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useApp } from "../appContext";
 import Icon from "../components/Icon";
 import Pager, { usePaged } from "../components/Pager";
-import { PriorityBadge, StatusBadge } from "../components/PaymentBadge";
+import { FlagBadge, PriorityBadge, StatusBadge } from "../components/PaymentBadge";
 import { addDays, formatDate, formatHours, formatTime, startOfWeek, todayISO } from "../data/dates";
 import { NEXT_STEP_LABEL, firstTimeFixRate, isOpen, nextStatus, percent, timesheet } from "../data/ops";
 import type { Job } from "../data/types";
@@ -13,6 +13,8 @@ const mapsLink = (address: string) => `https://www.google.com/maps/dir/?api=1&de
 
 function JobCard({ job }: { job: Job }) {
   const { client, site, scope, openJob, advanceJob } = useApp();
+  // Notes are kept newest first.
+  const latestNote = scope.jobNotes.find((note) => note.jobId === job.id);
   const owner = client(job.clientId);
   const location = site(job.siteId);
   const next = nextStatus(job);
@@ -26,11 +28,13 @@ function JobCard({ job }: { job: Job }) {
           <span className="tech-time">{job.date === today ? "" : `${formatDate(job.date, { weekday: "short", month: "short", day: "numeric" })} · `}{formatTime(job.time)} · {job.duration} h</span>
           <StatusBadge job={job} />
           <PriorityBadge priority={job.priority} />
+          {isOpen(job) && <FlagBadge job={job} />}
         </span>
         <strong className="tech-title">{job.title}</strong>
         <span className="tech-client">{owner?.name}{location && location.name !== "Home" ? ` · ${location.name}` : ""}</span>
         <span className="tech-address"><Icon name="pin" size={13} />{job.address}</span>
         {job.notes && <span className="tech-note">{job.notes}</span>}
+        {latestNote && <span className="note-preview"><strong>{latestNote.author.split(" ")[0]}:</strong> {latestNote.body}</span>}
       </button>
 
       {isOpen(job) && (

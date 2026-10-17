@@ -8,7 +8,9 @@ import type { PaymentStep } from "../data/store";
 import type { Job } from "../data/types";
 import CrewTag from "./CrewTag";
 import Icon from "./Icon";
-import PaymentBadge, { PriorityBadge, StatusBadge } from "./PaymentBadge";
+import JobUpdates from "./JobUpdates";
+import OnTheJob from "./OnTheJob";
+import PaymentBadge, { FlagBadge, PriorityBadge, StatusBadge } from "./PaymentBadge";
 import TextList from "./TextList";
 
 function Step({ index, title, done, children }: { index: number; title: string; done: boolean; children?: ReactNode }) {
@@ -54,7 +56,7 @@ function JobDrawer({ job, onClose }: { job: Job; onClose: () => void }) {
           <div>
             <p className="eyebrow">{job.id} · {job.trade.toUpperCase()}</p>
             <h2>{job.title}</h2>
-            <div className="badge-row"><StatusBadge job={job} /><PriorityBadge priority={job.priority} />{isOffice && <PaymentBadge job={job} />}</div>
+            <div className="badge-row"><StatusBadge job={job} /><PriorityBadge priority={job.priority} />{role.kind !== "client" && job.status !== "Completed" && <FlagBadge job={job} />}{isOffice && <PaymentBadge job={job} />}</div>
           </div>
           <button className="icon-button" aria-label="Close" onClick={onClose}><Icon name="close" size={16} /></button>
         </header>
@@ -94,6 +96,10 @@ function JobDrawer({ job, onClose }: { job: Job; onClose: () => void }) {
               <button className="primary-button" onClick={() => advanceJob(job.id)}><Icon name="check" size={15} />{NEXT_STEP_LABEL[next]}</button>
             )}
           </section>
+
+          {role.kind !== "client" && <OnTheJob job={job} />}
+
+          <JobUpdates job={job} />
 
           {job.closeOut && (
             <section className="drawer-section">

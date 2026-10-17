@@ -15,6 +15,12 @@ export function StatusBadge({ job }: { job: Job }) {
   return <span className={statusClass(job.status)}>{job.status}</span>;
 }
 
+/** A problem the crew raised, e.g. "Waiting on parts". */
+export function FlagBadge({ job }: { job: Job }) {
+  if (!job.flag) return null;
+  return <span className="status flag-badge">{job.flag}</span>;
+}
+
 export function PriorityBadge({ priority }: { priority: Priority }) {
   if (priority === "Routine") return null;
   return <span className={`status priority-${slug(priority)}`}>{priority}</span>;

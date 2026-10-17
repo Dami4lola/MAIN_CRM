@@ -2,7 +2,7 @@
 
 Tracks every place the build differs from `Chage_Plans.md`: what the plan said, what we do instead, why, and how it works now.
 
-Last updated: Oct 15, 2026 (end of Phase 2)
+Last updated: Oct 16, 2026 (tech updates on the job, found in Phase 2 testing)
 
 **Status key**
 - **Done**: built and working.
@@ -38,6 +38,7 @@ Last updated: Oct 15, 2026 (end of Phase 2)
 | 25 | Finishing a job | A job can only be completed through the close-out report | Done |
 | 26 | Site history for techs | Techs see past visits by any crew at their sites | Done |
 | 27 | Booking details | Morning/afternoon windows, a $95 emergency call-out fee, returning customers matched | Done |
+| 28 | Tech updates on the job | Techs post notes and client updates, flag problems, and report running late or needing more time | Done |
 | 22 | Job report PDFs | The browser's "Save as PDF" instead of generated files | Planned, Phase 3 |
 | 23 | AI assistant | In-browser search, with an optional link to DocumentQueryRAG | Planned, Phase 4 |
 
@@ -232,6 +233,20 @@ The whole seed takes about 2.4 million of the browser's roughly 5 million charac
   - Commercial-only services (such as rooftop unit maintenance) are hidden from homeowners.
 - **Returning customers:** a booking whose mobile number or email matches an existing homeowner is added to that customer's file, with no duplicate created. If the address entered differs from the one on file, it is noted on the job.
 - **Worth checking with a real buyer:** their actual windows, call-out fee and service list.
+
+### 28. Tech updates on the job
+
+- **Not in the plan.** Found in Phase 2 testing: a technician on a job could only tap the status buttons and fill in the close-out report, with no way to tell the office or the customer what was happening.
+- **Now:** every job drawer has a **Notes and updates** feed, and open jobs with a crew have an **On the job** section.
+  - **Notes:** techs and the office post on the same feed. Each note is either **Crew and office** (internal) or **Also tell the client**. A client update shows in the client portal's job drawer and is also sent as a "Job update" text, because homeowners have no portal. The tech's job card shows the latest note.
+  - **Flags:** "Waiting on parts" or "Needs office help". A flagged job gets an amber "Parts" or "Help" chip on the dispatch board, a badge in Jobs and on the tech's card, and the board header counts the day's flagged jobs. Close-out clears the flag.
+  - **Running late** (Scheduled or En route, today only): +15, +30 or +60 min moves the start time.
+  - **Need more time** (On site): +30 min, +1 h or +2 h extends the job.
+  - Both time changes can text the customer the new time (on by default). The board moves or stretches the job straight away. If the change runs into the crew's next job or past their shift, the drawer warns about it and the board flags the conflict in red.
+- **Still office-only:** title, crew, client, date, payments, Edit and Delete.
+- **Access:** the rule lives in `scopeFor` in `src/data/access.ts`, like every other rule. Office sees every note, a tech sees every note on their crew's jobs, and a client sees only the updates written for them, never internal notes.
+- **Seed:** today's flagged job (HVAC North, "Waiting on parts") has a tech note and an office reply, and one en-route job has a client update with its text.
+- **Older data:** saved sessions and backups from before this change still load. They just start with no notes.
 
 ## Planned changes (not built yet)
 

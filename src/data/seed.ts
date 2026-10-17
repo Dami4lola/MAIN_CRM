@@ -1,9 +1,10 @@
+import { OFFICE_USER } from "../brand";
 import { SERVICES, type Service } from "./catalog";
-import { addDays, fromISO, stamp, todayISO } from "./dates";
+import { addDays, fromISO, stamp, timeToHours, todayISO } from "./dates";
 import { EQUIPMENT_MAKES } from "./docs";
-import { composeMessage } from "./messages";
+import { composeMessage, updateSender } from "./messages";
 import { initials } from "./text";
-import type { Client, Crew, CrewColor, CrmState, Equipment, Job, JobSource, JobStatus, Message, PartUsed, Priority, Site, Technician, Trade } from "./types";
+import type { Client, Crew, CrewColor, CrmState, Equipment, Job, JobNote, JobSource, JobStatus, Message, PartUsed, Priority, Site, Technician, Trade } from "./types";
 
 /**
  * Demo data for "Northline Mechanical": 12 crews, ~400 homeowners, 3 commercial
@@ -470,7 +471,29 @@ export function createSeed(): CrmState {
     if (job.enRouteAt) messages.push(composeMessage("en-route", job, people, job.enRouteAt));
     if (job.completedAt) messages.push(composeMessage("done", job, people, job.completedAt));
   }
+
+  // A few notes from crews out on today's jobs, so the job feed has something to show.
+  const leadOf = (crewId: string | null) => technicians.find((tech) => tech.crewId === crewId && tech.position === "Lead") ?? technicians[0];
+  const hoursOf = (value: string) => timeToHours(value.slice(11));
+  const onSite = jobs.find((job) => job.date === today && job.status === "On site")!;
+  const enRoute = jobs.find((job) => job.date === today && job.status === "En route")!;
+  const partsNote: Record<Trade, string> = {
+    HVAC: "Inducer motor is seized. Needs a replacement before we can restart the unit. Checking supplier stock.",
+    Plumbing: "Main shut-off valve is corroded through. Needs a replacement valve before we can finish.",
+    Electrical: "Bus bar in the panel is scorched. Needs a replacement breaker before we can re-energise the circuit.",
+  };
+  onSite.flag = "Waiting on parts";
+  const enRouteLead = leadOf(enRoute.crewId);
+  const enRouteUpdate = "Just left our last job and heading your way. Please make sure we can get to the unit.";
+  const seededNotes: JobNote[] = [
+    { id: "NT-seed-1", jobId: onSite.id, at: stamp(today, hoursOf(onSite.arrivedAt!) + 0.5), author: leadOf(onSite.crewId).name, authorRole: "tech", visibility: "internal", body: partsNote[onSite.trade] },
+    { id: "NT-seed-2", jobId: onSite.id, at: stamp(today, hoursOf(onSite.arrivedAt!) + 0.75), author: OFFICE_USER.name, authorRole: "office", visibility: "internal", body: "Supplier has one in stock. Holding it at the counter for you." },
+    { id: "NT-seed-3", jobId: enRoute.id, at: enRoute.enRouteAt!, author: enRouteLead.name, authorRole: "tech", visibility: "client", body: enRouteUpdate },
+  ];
+  const jobNotes = seededNotes.sort((a, b) => b.at.localeCompare(a.at));
+  messages.push(composeMessage("update", enRoute, people, enRoute.enRouteAt!, { from: updateSender(enRouteLead.name, "tech"), detail: enRouteUpdate }));
+
   messages.sort((a, b) => b.at.localeCompare(a.at));
 
-  return { version: 3, crews, technicians, clients, sites, jobs, messages, audit: [], settings: { enRouteText: "on-my-way" }, currency: "USD" };
+  return { version: 3, crews, technicians, clients, sites, jobs, messages, jobNotes, audit: [], settings: { enRouteText: "on-my-way" }, currency: "USD" };
 }

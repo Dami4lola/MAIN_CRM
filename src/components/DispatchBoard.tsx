@@ -38,6 +38,10 @@ function DispatchBoard() {
   const crewById = new Map(crews.map((crew) => [crew.id, crew]));
   const conflicts = new Map(dayJobs.map((job) => [job.id, conflictsFor(job, crewById.get(job.crewId!)!, dayJobs)]));
   const conflictCount = [...conflicts.values()].filter((reasons) => reasons.length > 0).length;
+  const flaggedCount = dayJobs.filter((job) => job.flag && job.status !== "Completed").length;
+  // The newest note on each job, for the hover summary. Notes are kept newest first.
+  const latestNote = new Map<string, string>();
+  for (const note of store.state.jobNotes) if (!latestNote.has(note.jobId)) latestNote.set(note.jobId, `${note.author}: ${note.body}`);
   const tray = jobs
     .filter((job) => job.status === "Unassigned" && jobMatchesSearch(job))
     .sort((a, b) => PRIORITY_ORDER.indexOf(a.priority) - PRIORITY_ORDER.indexOf(b.priority) || a.requestedAt.localeCompare(b.requestedAt));
@@ -119,6 +123,7 @@ function DispatchBoard() {
             <Icon name={conflictCount ? "bell" : "check"} size={14} />
             {conflictCount ? `${conflictCount} ${conflictCount === 1 ? "conflict" : "conflicts"}` : "No conflicts"}
           </span>
+          {flaggedCount > 0 && <span className="conflict-count has-flags"><Icon name="bell" size={14} />{flaggedCount} flagged by crews</span>}
           <button className="secondary-button small" onClick={() => setDate(today)} disabled={date === today}>Today</button>
           <div className="date-switch">
             <button aria-label="Previous day" onClick={() => setDate(addDays(date, -1))}><Icon name="chevronLeft" size={17} /></button>
@@ -212,11 +217,14 @@ function DispatchBoard() {
                             openJob(job.id);
                           }}
                           onKeyDown={(event) => event.key === "Enter" && openJob(job.id)}
-                          title={[`${job.id} · ${job.title}`, `${client(job.clientId)?.name ?? ""}`, movable(job) ? "Drag to move" : `${job.status}: can't be moved`, ...issues].join("\n")}
+                          title={[`${job.id} · ${job.title}`, `${client(job.clientId)?.name ?? ""}`, movable(job) ? "Drag to move" : `${job.status}: can't be moved`, ...issues, ...(job.flag ? [`Flag: ${job.flag}`] : []), ...(latestNote.has(job.id) ? [`Latest note: ${latestNote.get(job.id)}`] : [])].join("\n")}
                         >
                           <span className="board-job-top">
                             <span>{formatTime(job.time)}</span>
-                            {issues.length > 0 && <span className="conflict-flag" aria-label={issues.join("; ")}>!</span>}
+                            <span className="board-job-marks">
+                              {job.flag && job.status !== "Completed" && <span className="flag-chip" aria-label={job.flag}>{job.flag === "Waiting on parts" ? "Parts" : "Help"}</span>}
+                              {issues.length > 0 && <span className="conflict-flag" aria-label={issues.join("; ")}>!</span>}
+                            </span>
                           </span>
                           <strong>{job.title}</strong>
                           <span className="board-job-client">{client(job.clientId)?.name}</span>

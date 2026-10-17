@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { nowStamp, todayISO } from "./dates";
-import { composeMessage } from "./messages";
+import { formatTime, hoursToTime, nowStamp, timeToHours, todayISO } from "./dates";
+import { composeMessage, updateSender } from "./messages";
 import { nextStatus } from "./ops";
 import { createSeed } from "./seed";
-import type { Client, CloseOut, CrmState, Job, JobStatus, Message, MessageKind, Settings } from "./types";
+import type { Client, CloseOut, CrmState, Job, JobFlag, JobNote, JobStatus, Message, MessageKind, Settings } from "./types";
 
 const STORAGE_KEY = "northline-field-ops-v3";
 const AUDIT_LIMIT = 500;
@@ -26,6 +26,9 @@ export type BookingInput = Pick<Job, "title" | "trade" | "priority" | "date" | "
 
 export type PaymentStep = "quote" | "deposit" | "paid";
 
+/** Who wrote a job note, as shown on the feed. */
+export type NoteAuthor = { name: string; role: JobNote["authorRole"] };
+
 export function isCrmState(value: unknown): value is CrmState {
   const state = value as CrmState;
   return (
@@ -37,12 +40,17 @@ export function isCrmState(value: unknown): value is CrmState {
   );
 }
 
+/** Fill in lists added after a backup or saved session was made, so older data still loads. */
+function withDefaults(state: CrmState): CrmState {
+  return Array.isArray(state.jobNotes) ? state : { ...state, jobNotes: [] };
+}
+
 function load(): CrmState {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed: unknown = JSON.parse(raw);
-      if (isCrmState(parsed)) return parsed;
+      if (isCrmState(parsed)) return withDefaults(parsed);
     }
   } catch {
     // Storage unavailable or corrupt: fall back to demo data.
@@ -68,9 +76,11 @@ function statusForCrew(status: JobStatus, crewId: string | null): JobStatus {
   return status;
 }
 
-function text(state: CrmState, job: Job, kind: MessageKind): Message {
-  return { ...composeMessage(kind, job, state, nowStamp()), id: newId("SMS") };
+function text(state: CrmState, job: Job, kind: MessageKind, update?: { from: string; detail: string }): Message {
+  return { ...composeMessage(kind, job, state, nowStamp(), update), id: newId("SMS") };
 }
+
+const durationLabel = (minutes: number) => (minutes < 60 ? `${minutes} minutes` : minutes === 60 ? "1 hour" : `${minutes / 60} hours`);
 
 /** Texts owed when a job is booked onto a crew, or moved to a new crew, day or time. */
 function bookingTexts(state: CrmState, before: Job | undefined, after: Job): Message[] {
@@ -115,7 +125,7 @@ export function useCrmStore() {
         const parsed: unknown = JSON.parse(event.newValue);
         if (!isCrmState(parsed)) return;
         written.current = event.newValue;
-        setState(parsed);
+        setState(withDefaults(parsed));
       } catch {
         // Ignore a partial or corrupt write.
       }
@@ -331,9 +341,65 @@ export function useCrmStore() {
           (job) => {
             if (job.status === "Completed" || job.status === "Unassigned") return job;
             const now = nowStamp();
-            return { ...job, status: "Completed", enRouteAt: job.enRouteAt ?? now, arrivedAt: job.arrivedAt ?? now, completedAt: now, firstTimeFix, closeOut };
+            return { ...job, status: "Completed", enRouteAt: job.enRouteAt ?? now, arrivedAt: job.arrivedAt ?? now, completedAt: now, firstTimeFix, closeOut, flag: null };
           },
           (_before, after, current) => [text(current, after, "done")],
+        );
+      },
+      /** Post on a job's feed. A client note is also texted to the customer. */
+      addJobNote(jobId: string, body: string, visibility: JobNote["visibility"], author: NoteAuthor) {
+        const trimmed = body.trim();
+        commit(
+          (current) => {
+            const job = current.jobs.find((item) => item.id === jobId);
+            return `${visibility === "client" ? "Sent a client update on" : "Added a note on"} ${job ? label(job) : jobId}`;
+          },
+          (current) => {
+            const job = current.jobs.find((item) => item.id === jobId);
+            if (!job || !trimmed) return current;
+            const note: JobNote = { id: newId("NT"), jobId, at: nowStamp(), author: author.name, authorRole: author.role, visibility, body: trimmed };
+            const messages = visibility === "client" ? [text(current, job, "update", { from: updateSender(author.name, author.role), detail: trimmed }), ...current.messages] : current.messages;
+            return { ...current, jobNotes: [note, ...current.jobNotes], messages };
+          },
+        );
+      },
+      /** Raise or clear a problem on an open job so the office sees it. */
+      setJobFlag(id: string, flag: JobFlag | null) {
+        patchJob(
+          id,
+          (job) => (flag ? `Flagged ${label(job)}: ${flag}` : `Cleared the flag on ${label(job)}`),
+          (job) => (job.status === "Completed" || (job.flag ?? null) === flag ? job : { ...job, flag }),
+        );
+      },
+      /**
+       * The crew is running late (moves the start, before arrival) or needs more time
+       * (adds to the duration, once on site). textFrom names the sender when the customer
+       * should be told; null sends no text.
+       */
+      adjustJobTime(id: string, mode: "late" | "extend", minutes: number, textFrom: string | null) {
+        patchJob(
+          id,
+          (job) =>
+            mode === "late"
+              ? `${label(job)}: running ${minutes} min late (now ${formatTime(hoursToTime(timeToHours(job.time) + minutes / 60))})`
+              : `${label(job)}: needs ${durationLabel(minutes)} more`,
+          (job) => {
+            if (mode === "late") {
+              const start = timeToHours(job.time) + minutes / 60;
+              if ((job.status !== "Scheduled" && job.status !== "En route") || start > 23.5) return job;
+              return { ...job, time: hoursToTime(start) };
+            }
+            if (job.status !== "On site") return job;
+            return { ...job, duration: job.duration + minutes / 60 };
+          },
+          (_before, after, current) => {
+            if (!textFrom) return [];
+            const detail =
+              mode === "late"
+                ? `we're running about ${minutes} minutes late and should now arrive around ${formatTime(after.time)}. Sorry for the wait.`
+                : `the job needs about ${durationLabel(minutes)} more than planned. We now expect to finish around ${formatTime(hoursToTime(timeToHours(after.time) + after.duration))}.`;
+            return [text(current, after, "update", { from: textFrom, detail })];
+          },
         );
       },
       markQuoted(id: string, amount: number) {
@@ -370,7 +436,7 @@ export function useCrmStore() {
       },
       importData(data: unknown) {
         if (!isCrmState(data)) return false;
-        commit(() => "Imported a backup", () => data);
+        commit(() => "Imported a backup", () => withDefaults(data));
         return true;
       },
     };

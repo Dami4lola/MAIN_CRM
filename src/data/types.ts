@@ -97,9 +97,16 @@ export type Job = {
   deposit: { amount: number; receivedAt: string | null };
   paidAt: string | null;
   notes: string;
+  /** A problem the crew has raised for the office. Optional so older saved data still loads. */
+  flag?: JobFlag | null;
 };
 
-export type MessageKind = "booking" | "booked" | "en-route" | "done";
+export type JobFlag = "Waiting on parts" | "Needs office help";
+
+/** A note on a job's feed. Internal notes stay with the office and crew; client notes also reach the customer. */
+export type JobNote = { id: string; jobId: string; at: string; author: string; authorRole: "tech" | "office"; visibility: "internal" | "client"; body: string };
+
+export type MessageKind = "booking" | "booked" | "en-route" | "done" | "update";
 
 /** A text message to a customer. The demo shows these in an outbox instead of sending them. */
 export type Message = { id: string; jobId: string; clientId: string; to: string; kind: MessageKind; body: string; at: string };
@@ -123,6 +130,7 @@ export type CrmState = {
   sites: Site[];
   jobs: Job[];
   messages: Message[];
+  jobNotes: JobNote[];
   audit: AuditEntry[];
   settings: Settings;
   currency: string;

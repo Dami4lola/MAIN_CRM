@@ -1,7 +1,7 @@
 import { useApp } from "../appContext";
 import { NEXT_STEP_LABEL, nextStatus } from "../data/ops";
 import type { Job } from "../data/types";
-import { StatusBadge } from "./PaymentBadge";
+import { FlagBadge, StatusBadge } from "./PaymentBadge";
 
 export function ClientLink({ clientId }: { clientId: string }) {
   const { isOffice, client, openClient } = useApp();
@@ -21,6 +21,7 @@ export function StatusButton({ job }: { job: Job }) {
   return (
     <span className="status-cell">
       <StatusBadge job={job} />
+      {job.status !== "Completed" && <FlagBadge job={job} />}
       {next && (
         <button className="secondary-button small" onClick={(event) => { event.stopPropagation(); advanceJob(job.id); }}>
           {NEXT_STEP_LABEL[next]}

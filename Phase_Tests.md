@@ -2,7 +2,7 @@
 
 The tests to complete before calling each phase done. Each phase ends with something shown on sales calls, so a phase isn't finished until its tests pass.
 
-Last updated: Oct 15, 2026 (end of Phase 2)
+Last updated: Oct 16, 2026 (tech updates on the job added to Phase 2)
 
 ## How to use this
 
@@ -45,7 +45,7 @@ Last updated: Oct 15, 2026 (end of Phase 2)
 - [ ] **P1-08** Two windows: open the office in one and a technician in another → each keeps its own role. *(manual)*
 
 ### Seed data
-- [x] **P1-09** Counts: 2,844 jobs, 403 clients, 423 sites, 24 technicians, 12 crews. *(automated, Oct 15; 2,854 before Phase 2 made every job fit inside its crew's shift)*
+- [x] **P1-09** Counts: 2,844 jobs, 403 clients, 423 sites, 24 technicians, 12 crews. *(automated, Oct 15; 2,854 before Phase 2 made every job fit inside its crew's shift. The seed moves with today's date, so the total varies by day: 2,861 on Oct 16.)*
 - [x] **P1-10** No job has a request time later than today. Every job has a valid start time. *(automated, Oct 15)*
 - [x] **P1-11** About 88% of tracked commercial calls meet their SLA (121 of 138), and first-time fix on repairs is about 86%. *(automated, Oct 15)*
 - [x] **P1-12** Reset produces the same data every time. *(automated, Oct 15)*
@@ -148,6 +148,20 @@ Several tests below say *Logic checked automatically Oct 15*: the rules were ver
 - [x] **P2-34** Two jobs created before the screen refreshes get different job numbers. *(automated)*
 - [x] **P2-35** The activity log records the customer (online booking), the office and the tech for their own actions. *(automated)*
 - [x] **P2-36** All 17 pages render with no errors, including the booking page, dispatch board and Texts page. *(automated)*
+
+### Tech updates on the job (added Oct 16)
+Test with dispatch in one window and Marcus Lee (HVAC North) at 375 px in another. *Logic checked automatically Oct 16* means the rules were verified by script, but the screen still needs a click-through before you tick it.
+
+- [ ] **P2-37** After Reset, the dispatch board shows 1 job flagged "Parts" and "1 flagged by crews" in the header. Its drawer has a tech note and an office reply.
+- [ ] **P2-38** The tech posts a "Crew and office" note → it appears in the office drawer within about 1 second, the activity log shows "Marcus Lee (tech)", and no text is sent. *Logic checked automatically Oct 16.*
+- [ ] **P2-39** The tech posts with "Also tell the client" → a "Job update" text appears in the outbox and the drawer's Customer texts, with the tech's first name and no blank placeholders. *Logic checked automatically Oct 16.*
+- [ ] **P2-40** For a Harbourview job, the portal drawer shows the client update but never the internal notes, and has nowhere to write. Another account sees neither. *Logic checked automatically Oct 16.*
+- [ ] **P2-41** The office posts on the same feed → the tech sees it, and it shows as the latest note on the tech's job card.
+- [ ] **P2-42** The tech flags "Waiting on parts" or "Needs office help" → the chip appears on the board, the badge appears in Jobs, and the header count goes up. Clear flag removes it. Close-out also clears it. *Logic checked automatically Oct 16.*
+- [ ] **P2-43** Running late +30 on a scheduled job today → the job moves 30 minutes on the board, and the customer gets a text with the new arrival time. Unticking "Text the customer" sends no text. *Logic checked automatically Oct 16.*
+- [ ] **P2-44** Need more time +2 h on an on-site job that runs into the crew's next job → the drawer shows the overlap warning and the board flags it in red. *Logic checked automatically Oct 16.*
+- [ ] **P2-45** The tech still has no Edit, Delete or payment controls (P1-18). Notes, flag and time buttons are thumb-sized at 375 px, with no sideways scroll.
+- [ ] **P2-46** Reload keeps notes and flags. Reset brings back only the seeded notes. A backup made before Oct 16 still imports. *Logic checked automatically Oct 16.*
 
 ---
 
