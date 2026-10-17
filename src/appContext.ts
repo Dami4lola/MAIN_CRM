@@ -31,6 +31,8 @@ export type AppContextValue = {
   editJob: (id: string) => void;
   removeJob: (id: string) => void;
   advanceJob: (id: string) => void;
+  /** Open the printable service report for a completed job. */
+  openReport: (id: string) => void;
 };
 
 export const AppContext = createContext<AppContextValue | null>(null);

@@ -530,7 +530,89 @@ tfoot td { background: #fafbfc; }
 .note-meta { margin-bottom: 4px; display: flex; flex-wrap: wrap; align-items: center; gap: 3px 8px; color: #8b95a2; font-size: 10px; }
 .note-meta strong { color: #3a4654; }
 .note-tag { padding: 1px 6px; border-radius: 8px; color: #8a5a00; background: #ffe6b3; font-size: 9px; font-weight: 700; }
+.report-button { margin-top: 12px; }
 .note-preview { margin-top: 2px; color: #536171; font-size: 12px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* Client portal */
+.portal-grid { margin-bottom: 16px; display: grid; grid-template-columns: 1.35fr 1fr; align-items: start; gap: 16px; }
+.portal-grid .panel + .panel { margin-top: 0; }
+.toolbar-inline { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.live-list { max-height: 330px; margin: 0; padding: 4px 18px; list-style: none; overflow-y: auto; }
+.live-list li { padding: 12px 0; border-bottom: 1px solid #edf0f2; display: flex; align-items: flex-start; gap: 10px; }
+.live-list li:last-child { border-bottom: 0; }
+.live-main { min-width: 0; flex: 1; padding: 0; border: 0; background: transparent; display: grid; gap: 3px; text-align: left; }
+.live-top { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.live-top small { color: #98a1ab; font-size: 9px; }
+.live-main > strong { color: #1c2634; font-size: 12px; }
+.live-site { color: #6b7785; font-size: 11px; }
+.live-status { color: #2a3543; font-size: 11px; font-weight: 600; }
+.live-due { color: #6b7785; display: inline-flex; align-items: center; gap: 4px; font-size: 10px; }
+.live-due.is-late { color: #b4483f; font-weight: 700; }
+
+/* SLA chart: one series, columns on a 0–100% axis */
+.sla-chart { padding: 22px 18px 14px 52px; }
+.sla-plot { position: relative; height: 170px; }
+.sla-grid { position: absolute; left: 0; right: 0; border-top: 1px solid #edf0f2; }
+.sla-grid span { position: absolute; left: -40px; top: -7px; width: 32px; color: #98a1ab; text-align: right; font-size: 9px; font-variant-numeric: tabular-nums; }
+.sla-columns { position: absolute; inset: 0; display: flex; }
+.sla-column { position: relative; flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; outline: 0; cursor: default; }
+.sla-column:focus-visible { box-shadow: inset 0 0 0 2px #b9d8f8; border-radius: 6px; }
+.sla-bar { position: relative; width: min(24px, 60%); border-radius: 4px 4px 0 0; background: #217fe5; transition: background .15s; }
+.sla-column.is-active .sla-bar { background: #4a98ec; }
+.sla-cap { position: absolute; left: 50%; top: -18px; transform: translateX(-50%); color: #26313f; white-space: nowrap; font-size: 10px; font-weight: 700; }
+.sla-none { margin-bottom: 4px; color: #98a1ab; font-size: 9px; }
+.sla-tooltip { position: absolute; z-index: 2; left: 50%; transform: translateX(-50%); padding: 8px 10px; border-radius: 7px; color: #c9d3dd; background: #1b2a39; display: grid; gap: 1px; white-space: nowrap; font-size: 10px; box-shadow: 0 6px 18px rgba(15, 30, 45, .2); pointer-events: none; }
+.sla-tooltip strong { color: #fff; font-size: 13px; }
+.sla-columns .sla-column:first-child .sla-tooltip { left: 0; transform: none; }
+.sla-columns .sla-column:last-child .sla-tooltip { left: auto; right: 0; transform: none; }
+.sla-axis { margin-top: 7px; display: flex; }
+.sla-axis span { flex: 1; color: #7a8592; text-align: center; font-size: 9px; }
+table.compact-table { min-width: 0; }
+
+/* Printable job report */
+.report-overlay { position: fixed; inset: 0; z-index: 70; padding: 0 16px 40px; background: #e9edf1; overflow-y: auto; }
+.report-toolbar { position: sticky; top: 0; z-index: 1; max-width: 800px; margin: 0 auto; padding: 14px 0; background: #e9edf1; display: flex; align-items: center; gap: 12px; }
+.report-hint { flex: 1; color: #536171; text-align: center; font-size: 11px; }
+.report-sheet { max-width: 800px; margin: 0 auto; padding: 40px 44px 28px; border-radius: 4px; color: #26313e; background: #fff; box-shadow: 0 6px 24px rgba(20, 30, 40, .12); font-size: 12px; line-height: 1.45; }
+.report-head { padding-bottom: 18px; border-bottom: 2px solid #1c2634; display: flex; justify-content: space-between; gap: 16px; }
+.report-head > div { display: grid; gap: 2px; }
+.report-company { font: 800 18px "Manrope", sans-serif; }
+.report-head span { color: #6b7785; font-size: 11px; }
+.report-title { text-align: right; }
+.report-title span { text-transform: uppercase; letter-spacing: 1.2px; font-size: 9px; font-weight: 700; }
+.report-title strong { font: 800 18px "Manrope", sans-serif; }
+.report-section { padding: 16px 0; border-bottom: 1px solid #e3e7eb; break-inside: avoid; }
+.report-section h3 { margin: 0 0 8px; color: #1c2634; font: 700 12px "Manrope", sans-serif; }
+.report-facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 24px; }
+.report-facts > div, .report-signoff > div { display: grid; gap: 2px; }
+.report-facts span, .report-signoff span, .report-timeline dt { color: #7a8592; text-transform: uppercase; letter-spacing: .6px; font-size: 9px; font-weight: 700; }
+.report-facts small { color: #536171; font-size: 11px; }
+.report-timeline { margin: 0 0 8px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.report-timeline dd { margin: 2px 0 0; font-weight: 600; }
+.report-line { margin: 0; color: #4c5968; }
+.report-line .positive { color: #27855f; }
+.report-line .owed { color: #c2552d; }
+.report-notes { margin: 0 0 6px; white-space: pre-wrap; }
+.report-parts { width: 100%; min-width: 0; border-collapse: collapse; }
+.report-parts th, .report-parts td { height: auto; padding: 6px 0; border-bottom: 1px solid #edf0f2; text-align: left; font-size: 12px; }
+.report-parts th { color: #7a8592; background: none; text-transform: uppercase; font-size: 9px; }
+.report-parts th:last-child, .report-parts td:last-child { width: 60px; text-align: right; }
+.report-updates { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.report-updates span { display: block; color: #7a8592; font-size: 10px; }
+.report-photos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.report-photos img { width: 100%; aspect-ratio: 4 / 3; border-radius: 4px; object-fit: cover; }
+.report-signoff { border-bottom: 0; display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; align-items: end; }
+.report-signoff img { max-width: 220px; max-height: 70px; border-bottom: 1px solid #c3cad2; }
+.report-signoff em { padding: 18px 0 6px; border-bottom: 1px solid #c3cad2; color: #8b95a2; font-size: 11px; }
+.report-foot { padding-top: 14px; border-top: 1px solid #e3e7eb; color: #8b95a2; text-align: center; font-size: 9px; }
+
+@media print {
+  @page { margin: 14mm; }
+  body:has(.report-overlay) { background: #fff; }
+  body:has(.report-overlay) .app-shell, .report-toolbar { display: none !important; }
+  .report-overlay { position: static; padding: 0; background: #fff; overflow: visible; }
+  .report-sheet { max-width: none; padding: 0; border-radius: 0; box-shadow: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
 
 /* Forms */
 .modal-top { z-index: 55; }
@@ -591,7 +673,7 @@ tfoot td { background: #fafbfc; }
   .nav-item.active { box-shadow: none; }
   .mobile-only { display: block; }
   .report-grid, .signin-grid, .booking-layout { grid-template-columns: 1fr; }
-  .dispatch-layout { grid-template-columns: 1fr; }
+  .dispatch-layout, .portal-grid { grid-template-columns: 1fr; }
   .tray { max-height: 340px; border-right: 0; border-bottom: 1px solid #e6eaed; }
   .dispatch .panel-header { flex-direction: column; align-items: flex-start; }
   .dispatch .schedule-controls { flex-wrap: wrap; }
@@ -626,6 +708,14 @@ tfoot td { background: #fafbfc; }
   .job-controls .secondary-button.small, .note-composer .segmented button { min-height: 40px; font-size: 12px; }
   .note-composer textarea { font-size: 16px; }
   .note-composer .primary-button { height: 44px; justify-self: stretch; }
+  .report-hint { display: none; }
+  .report-toolbar { justify-content: space-between; }
+  .report-sheet { padding: 24px 18px; }
+  .report-facts, .report-signoff { grid-template-columns: 1fr; }
+  .report-timeline { grid-template-columns: 1fr 1fr; }
+  .report-photos { grid-template-columns: 1fr 1fr; }
+  .sla-chart { padding-left: 46px; padding-right: 12px; }
+  table.compact-table { min-width: 0; }
   .job-table-wrap { padding-bottom: 4px; }
   table { min-width: 760px; }
 }

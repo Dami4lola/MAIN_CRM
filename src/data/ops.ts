@@ -1,4 +1,4 @@
-import { formatTime, hoursBetween, hoursToTime, timeToHours } from "./dates";
+import { formatTime, fromISO, hoursBetween, hoursToTime, stamp, timeToHours, toISO } from "./dates";
 import type { Client, Crew, Job, JobStatus, Technician } from "./types";
 
 export const STATUS_FLOW: JobStatus[] = ["Unassigned", "Scheduled", "En route", "On site", "Completed"];
@@ -55,6 +55,31 @@ export function slaMet(job: Job, client: Client | undefined) {
 export function slaRate(jobs: Job[], client: (id: string) => Client | undefined) {
   const results = jobs.map((job) => slaMet(job, client(job.clientId))).filter((result) => result !== null);
   return results.length ? results.filter(Boolean).length / results.length : null;
+}
+
+/**
+ * Within-SLA share for each of the last few calendar months, counted by visit date so it
+ * matches the visit list. Months with no tracked calls have a null rate.
+ */
+export function slaByMonth(jobs: Job[], client: (id: string) => Client | undefined, today: string, months = 6) {
+  return Array.from({ length: months }, (_, index) => {
+    const first = fromISO(`${today.slice(0, 7)}-01`);
+    first.setMonth(first.getMonth() - (months - 1 - index));
+    const month = toISO(first).slice(0, 7);
+    const results = jobs.filter((job) => job.date.startsWith(month)).map((job) => slaMet(job, client(job.clientId))).filter((result) => result !== null);
+    const met = results.filter(Boolean).length;
+    return { month, tracked: results.length, met, rate: results.length ? met / results.length : null };
+  });
+}
+
+export type SlaMonth = ReturnType<typeof slaByMonth>[number];
+
+/** When the crew must arrive to meet the SLA, for a tracked call that hasn't been reached yet. */
+export function slaDueBy(job: Job, client: Client | undefined) {
+  const target = slaTarget(job, client);
+  if (target === null || job.arrivedAt) return null;
+  const [date, time] = job.requestedAt.split("T");
+  return stamp(date, timeToHours(time) + target);
 }
 
 export function firstTimeFixRate(jobs: Job[]) {

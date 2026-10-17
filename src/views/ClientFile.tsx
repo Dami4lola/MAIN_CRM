@@ -5,9 +5,10 @@ import Icon from "../components/Icon";
 import JobMenu from "../components/JobMenu";
 import Pager, { usePaged } from "../components/Pager";
 import PaymentBadge, { StatusBadge } from "../components/PaymentBadge";
+import SlaChart from "../components/SlaChart";
 import { addDays, formatDate, formatTime, todayISO } from "../data/dates";
 import { clientTotals, jobBalance } from "../data/money";
-import { isOpen, percent, slaRate } from "../data/ops";
+import { isOpen, percent, slaByMonth, slaRate } from "../data/ops";
 import { initials, plural } from "../data/text";
 
 type Props = { clientId: string; onBack: () => void; onEdit: () => void };
@@ -82,6 +83,8 @@ function ClientFile({ clientId, onBack, onEdit }: Props) {
         <article className="metric-card"><span className="metric-icon green"><Icon name="check" /></span><span><small>Collected</small><strong>{money(totals.collected)}</strong></span><em className="positive">{plural(jobs.filter((job) => job.paidAt).length, "job")} paid in full</em></article>
         <article className="metric-card"><span className="metric-icon purple"><Icon name="dollar" /></span><span><small>Outstanding</small><strong>{money(totals.outstanding)}</strong></span><em>{plural(jobs.filter((job) => jobBalance(job) > 0).length, "job")} awaiting payment</em></article>
       </div>
+
+      {commercial && <SlaChart rows={slaByMonth(jobs, client, todayISO())} responseHours={record.sla?.responseHours} />}
 
       {commercial && (
         <section className="panel">

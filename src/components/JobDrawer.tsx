@@ -26,7 +26,7 @@ function Step({ index, title, done, children }: { index: number; title: string; 
 }
 
 function JobDrawer({ job, onClose }: { job: Job; onClose: () => void }) {
-  const { role, isOffice, store, scope, money, client, site, crew, crewMembers, notify, openClient, editJob, removeJob, advanceJob } = useApp();
+  const { role, isOffice, store, scope, money, client, site, crew, crewMembers, notify, openClient, editJob, removeJob, advanceJob, openReport } = useApp();
   const [quoteInput, setQuoteInput] = useState(job.quote.amount ? String(job.quote.amount) : "");
   const [depositInput, setDepositInput] = useState(job.deposit.amount ? String(job.deposit.amount) : "");
   const owner = client(job.clientId);
@@ -115,6 +115,7 @@ function JobDrawer({ job, onClose }: { job: Job; onClose: () => void }) {
                 Signed off by {job.closeOut.signedBy}
                 {job.firstTimeFix !== null && <> · {job.firstTimeFix ? "Fixed on the first visit" : "Return visit needed"}</>}
               </p>
+              {job.status === "Completed" && <button className="secondary-button report-button" onClick={() => openReport(job.id)}><Icon name="printer" size={15} />View and save the report</button>}
             </section>
           )}
 

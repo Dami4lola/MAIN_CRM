@@ -2,7 +2,7 @@
 
 Tracks every place the build differs from `Chage_Plans.md`: what the plan said, what we do instead, why, and how it works now.
 
-Last updated: Oct 16, 2026 (tech updates on the job, found in Phase 2 testing)
+Last updated: Oct 16, 2026 (Phase 3 client portal built)
 
 **Status key**
 - **Done**: built and working.
@@ -39,7 +39,8 @@ Last updated: Oct 16, 2026 (tech updates on the job, found in Phase 2 testing)
 | 26 | Site history for techs | Techs see past visits by any crew at their sites | Done |
 | 27 | Booking details | Morning/afternoon windows, a $95 emergency call-out fee, returning customers matched | Done |
 | 28 | Tech updates on the job | Techs post notes and client updates, flag problems, and report running late or needing more time | Done |
-| 22 | Job report PDFs | The browser's "Save as PDF" instead of generated files | Planned, Phase 3 |
+| 22 | Job report PDFs | The browser's "Save as PDF" instead of generated files | Done |
+| 29 | Client portal details | Live "today" panel, SLA chart counted by visit month, SLA wording shown | Done; wording needs your OK |
 | 23 | AI assistant | In-browser search, with an optional link to DocumentQueryRAG | Planned, Phase 4 |
 
 ## Changes in detail
@@ -248,13 +249,31 @@ The whole seed takes about 2.4 million of the browser's roughly 5 million charac
 - **Seed:** today's flagged job (HVAC North, "Waiting on parts") has a tech note and an office reply, and one en-route job has a client update with its text.
 - **Older data:** saved sessions and backups from before this change still load. They just start with no notes.
 
-## Planned changes (not built yet)
+## Phase 3 changes
 
-### 22. Job report PDFs (Phase 3)
+### 22. Job report PDFs
 
 - **Original plan:** generated report PDFs stored in S3.
-- **Planned:** a printable job report page, saved as a PDF through the browser's own "Save as PDF".
+- **Now:** every completed job has a **service report**, opened from the job drawer ("View and save the report") or the **Report** button in the portal. It's laid out as a printed page, and **Save as PDF** opens the browser's print window, where you pick "Save as PDF". Printing hides the rest of the app.
+- **What it shows:** the customer, site and service; the visit timeline (requested, on the way, arrived, completed); response time against the SLA; time on site and the crew; the work notes and first-time-fix answer; parts and quantities; client-visible updates; up to 4 photos; and the signature.
+- **What it leaves out:** prices, which match the portal having no payment view, and internal notes. So the office and the customer get the same document.
 - **Why:** no extra libraries are needed, and the result looks the same.
+- **Limit:** the seeded history has no photos or drawn signatures, so older reports show "Signed on site". Close out a job yourself to see a full report.
+
+### 29. Client portal details
+
+- **Plan:** "job counts, visit status, SLA performance and download job reports."
+- **Now:** the portal home has, from top to bottom:
+  - **Headline numbers:** sites covered, open visits, completed in the last 30 days, and % within SLA over the last 90 days. These use the same calculations as the office client file.
+  - **SLA performance, last 6 months:** one column per month, with the latest month labelled and a hover tooltip with the counts ("10 of 12 calls within SLA"). A **Table** switch lists every month. The office client file shows the same chart.
+  - **Today at your sites:** each of today's visits with its live status ("On the way since 9:40 AM", "On site since…"), the latest client update, and, for urgent and emergency calls not yet reached, **"Arrival due by"** the SLA time, which turns red once it has passed. It updates as the crew moves.
+  - **Your sites:** each site with its open visits, last visit date and % within SLA. Clicking one filters the visits.
+  - **Service visits:** the full list, with a Report button on completed visits.
+- **SLA counting:** a call counts in the month of its visit date, so the chart can be checked against the visit list, which shows "Within SLA" or "Missed SLA" on every tracked visit.
+- **SLA wording on screen:** "Urgent and emergency calls, request to arrival". **Needs your OK** (P3-09), and is worth checking with a real buyer (see change 9).
+- **Access:** reports only open for the signed-in account's own jobs, so a job ID from another account shows nothing.
+
+## Planned changes (not built yet)
 
 ### 23. "Ask the job history" assistant (Phase 4)
 
@@ -274,3 +293,4 @@ The whole seed takes about 2.4 million of the browser's roughly 5 million charac
 | Demo company name | Still open; "Northline Mechanical" is a placeholder (change 15) |
 | 10 hours a week and the Dec 6 target | Still open |
 | **New:** when the "en route" text is sent | Built with the proposed default and a Settings switch; needs your OK (change 18) |
+| **New:** SLA wording shown to customers | "Urgent and emergency calls, request to arrival"; needs your OK (change 29) |

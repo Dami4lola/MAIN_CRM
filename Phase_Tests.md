@@ -2,7 +2,7 @@
 
 The tests to complete before calling each phase done. Each phase ends with something shown on sales calls, so a phase isn't finished until its tests pass.
 
-Last updated: Oct 16, 2026 (tech updates on the job added to Phase 2)
+Last updated: Oct 16, 2026 (Phase 3 built; manual tests to do)
 
 ## How to use this
 
@@ -93,52 +93,52 @@ Last updated: Oct 16, 2026 (tech updates on the job added to Phase 2)
 
 ---
 
-## Phase 2: Booking, dispatch board, tech view, close-out (Nov 2 – 15)
+## Phase 2: Booking, dispatch board, tech view, close-out (Nov 2 – 15; tests passed Oct 16, 2026)
 
 **Demo-able when done:** assign a job and watch it appear on the phone.
 
 ### Online booking
 Several tests below say *Logic checked automatically Oct 15*: the rules were verified by script, but the screen itself still needs a click-through before you tick it.
 
-- [ ] **P2-01** The booking page opens from its own address without signing in, and works at phone width.
-- [ ] **P2-02** You can't move to the next step with a required field empty, and each missing field shows a clear message.
-- [ ] **P2-03** The instant estimate falls inside the catalog price range for the chosen service.
-- [ ] **P2-04** Submitting creates an **Unassigned** job marked Online. The job keeps the customer details and preferred time, and appears in the dispatch tray, in Jobs and in the menu count. *Logic checked automatically Oct 15.*
-- [ ] **P2-05** A brand-new customer is created with a home site, and a returning customer (matched by phone or email) is not duplicated. *Logic checked automatically Oct 15.*
-- [ ] **P2-06** A "booking received" text appears in the outbox, and the confirmation screen shows the same text. *Logic checked automatically Oct 15.*
+- [x] **P2-01** The booking page opens from its own address without signing in, and works at phone width. *(passed Oct 16)*
+- [x] **P2-02** You can't move to the next step with a required field empty, and each missing field shows a clear message. *(passed Oct 16)*
+- [x] **P2-03** The instant estimate falls inside the catalog price range for the chosen service. *(passed Oct 16)*
+- [x] **P2-04** Submitting creates an **Unassigned** job marked Online. The job keeps the customer details and preferred time, and appears in the dispatch tray, in Jobs and in the menu count. *Logic checked automatically Oct 15.* *(passed Oct 16)*
+- [x] **P2-05** A brand-new customer is created with a home site, and a returning customer (matched by phone or email) is not duplicated. *Logic checked automatically Oct 15.* *(passed Oct 16)*
+- [x] **P2-06** A "booking received" text appears in the outbox, and the confirmation screen shows the same text. *Logic checked automatically Oct 15.* *(passed Oct 16)*
 
 ### Dispatch board
-- [ ] **P2-07** One row per crew (12), hours along the top, and today's jobs in the right places.
-- [ ] **P2-08** Dragging a job from the tray onto a crew and time assigns that crew and time, makes it Scheduled, and adds an activity-log entry. A dashed preview shows where it will land while you drag. *Logic checked automatically Oct 15.*
-- [ ] **P2-09** Dragging a job between crews or times updates it. Dragging it back to the tray makes it Unassigned. *Logic checked automatically Oct 15.*
-- [ ] **P2-10** Conflicts are flagged in red with a reason: two jobs overlapping on one crew, a job outside the crew's hours, and the wrong trade (for example a plumbing job on an HVAC crew). The header counts the conflicts, and hovering shows the reason. *Logic checked automatically Oct 15.*
-- [ ] **P2-11** The emergency no-heat call can be assigned in under 3 clicks or drags.
-- [ ] **P2-12** The board stays usable with all of today's jobs, plus the tray, on a laptop screen.
-- [ ] **P2-13** On a touch screen: tap **Place** on a request, then tap a crew's row → the job is booked at that time. Cancel in the blue banner stops placing.
+- [x] **P2-07** One row per crew (12), hours along the top, and today's jobs in the right places. *(passed Oct 16)*
+- [x] **P2-08** Dragging a job from the tray onto a crew and time assigns that crew and time, makes it Scheduled, and adds an activity-log entry. A dashed preview shows where it will land while you drag. *Logic checked automatically Oct 15.* *(passed Oct 16)*
+- [x] **P2-09** Dragging a job between crews or times updates it. Dragging it back to the tray makes it Unassigned. *Logic checked automatically Oct 15.* *(passed Oct 16)*
+- [x] **P2-10** Conflicts are flagged in red with a reason: two jobs overlapping on one crew, a job outside the crew's hours, and the wrong trade (for example a plumbing job on an HVAC crew). The header counts the conflicts, and hovering shows the reason. *Logic checked automatically Oct 15.* *(passed Oct 16)*
+- [x] **P2-11** The emergency no-heat call can be assigned in under 3 clicks or drags. *(passed Oct 16)*
+- [x] **P2-12** The board stays usable with all of today's jobs, plus the tray, on a laptop screen. *(passed Oct 16)*
+- [x] **P2-13** On a touch screen: tap **Place** on a request, then tap a crew's row → the job is booked at that time. Cancel in the blue banner stops placing. *(passed Oct 16)*
 
 ### Customer texts (outbox)
-- [ ] **P2-14** Texts fire at the right moments. With the default setting: "booked" when a crew is assigned or the job moves, "on the way" when the tech taps On my way, and "job done" at close-out. With Settings → "On the way" text → "As soon as a crew is assigned": assigning sends both "booked" and "on the way". *Logic checked automatically Oct 15.*
-- [ ] **P2-15** Each text shows the right customer name, time and tech name, with no blank placeholders. *Seeded texts checked automatically Oct 15.*
-- [ ] **P2-16** Each job's drawer lists its own texts.
+- [x] **P2-14** Texts fire at the right moments. With the default setting: "booked" when a crew is assigned or the job moves, "on the way" when the tech taps On my way, and "job done" at close-out. With Settings → "On the way" text → "As soon as a crew is assigned": assigning sends both "booked" and "on the way". *Logic checked automatically Oct 15.* *(passed Oct 16)*
+- [x] **P2-15** Each text shows the right customer name, time and tech name, with no blank placeholders. *Seeded texts checked automatically Oct 15.* *(passed Oct 16)*
+- [x] **P2-16** Each job's drawer lists its own texts. *(passed Oct 16)*
 
 ### Live updates between windows
-- [ ] **P2-17** With dispatch in one window and the assigned tech in a phone-sized window, assigning makes the job appear on the tech side within about 1 second, without reloading.
-- [ ] **P2-18** The tech taps "On my way" → the board updates within about 1 second.
-- [ ] **P2-19** Changes made a few seconds apart in the two windows are both kept. (Changes in the same instant: the last save wins, a known limit until the backend exists.)
+- [x] **P2-17** With dispatch in one window and the assigned tech in a phone-sized window, assigning makes the job appear on the tech side within about 1 second, without reloading. *(passed Oct 16)*
+- [x] **P2-18** The tech taps "On my way" → the board updates within about 1 second. *(passed Oct 16)*
+- [x] **P2-19** Changes made a few seconds apart in the two windows are both kept. (Changes in the same instant: the last save wins, a known limit until the backend exists.) *(passed Oct 16)*
 
 ### Tech mobile view (test at 375 px wide)
-- [ ] **P2-20** Today's jobs appear as cards in time order, each with status, address and customer.
-- [ ] **P2-21** "Directions" opens the address in Google Maps, and "Call" starts a phone call to the customer.
-- [ ] **P2-22** Buttons are big enough to tap with a thumb, and nothing needs sideways scrolling.
-- [ ] **P2-23** Past visits and equipment at the site are visible from the job.
+- [x] **P2-20** Today's jobs appear as cards in time order, each with status, address and customer. *(passed Oct 16)*
+- [x] **P2-21** "Directions" opens the address in Google Maps, and "Call" starts a phone call to the customer. *(passed Oct 16)*
+- [x] **P2-22** Buttons are big enough to tap with a thumb, and nothing needs sideways scrolling. *(passed Oct 16)*
+- [x] **P2-23** Past visits and equipment at the site are visible from the job. *(passed Oct 16)*
 
 ### Close-out
-- [ ] **P2-24** On an on-site job, "Close out" opens the close-out report instead of finishing the job immediately. Tapping outside the report doesn't close it.
-- [ ] **P2-25** Notes, the fixed-on-this-visit answer and a signature are required, each with a clear message. Parts can be added, have their quantity changed with − and +, and are removed at 0. The parts total adds up.
-- [ ] **P2-26** A photo taken (on a phone, the camera opens) or uploaded is saved small (about 90 KB or less each). A 5th photo is refused with a clear message (up to 4 per job), and a photo can be removed with ×.
-- [ ] **P2-27** The signature pad works with a finger and a mouse, Clear works, and the signature appears on the job report.
-- [ ] **P2-28** First-time fix is asked (yes/no). Saving completes the job with the time, notes, parts, photos and signature, shows them in the drawer's job report, and adds the hours to the Crews timesheet. *Logic checked automatically Oct 15.*
-- [ ] **P2-29** After 10 photos across several jobs, R-08 (storage budget) still passes. When storage is full, the close-out says so and asks you to remove a photo or reset, and the app doesn't crash.
+- [x] **P2-24** On an on-site job, "Close out" opens the close-out report instead of finishing the job immediately. Tapping outside the report doesn't close it. *(passed Oct 16)*
+- [x] **P2-25** Notes, the fixed-on-this-visit answer and a signature are required, each with a clear message. Parts can be added, have their quantity changed with − and +, and are removed at 0. The parts total adds up. *(passed Oct 16)*
+- [x] **P2-26** A photo taken (on a phone, the camera opens) or uploaded is saved small (about 90 KB or less each). A 5th photo is refused with a clear message (up to 4 per job), and a photo can be removed with ×. *(passed Oct 16)*
+- [x] **P2-27** The signature pad works with a finger and a mouse, Clear works, and the signature appears on the job report. *(passed Oct 16)*
+- [x] **P2-28** First-time fix is asked (yes/no). Saving completes the job with the time, notes, parts, photos and signature, shows them in the drawer's job report, and adds the hours to the Crews timesheet. *Logic checked automatically Oct 15.* *(passed Oct 16)*
+- [x] **P2-29** After 10 photos across several jobs, R-08 (storage budget) still passes. When storage is full, the close-out says so and asks you to remove a photo or reset, and the app doesn't crash. *(passed Oct 16)*
 
 ### Checked automatically (Oct 15)
 - [x] **P2-30** Seeded jobs for today and the next two weeks have no conflicts, and every seeded job ends inside its crew's shift. *(automated)*
@@ -152,32 +152,40 @@ Several tests below say *Logic checked automatically Oct 15*: the rules were ver
 ### Tech updates on the job (added Oct 16)
 Test with dispatch in one window and Marcus Lee (HVAC North) at 375 px in another. *Logic checked automatically Oct 16* means the rules were verified by script, but the screen still needs a click-through before you tick it.
 
-- [ ] **P2-37** After Reset, the dispatch board shows 1 job flagged "Parts" and "1 flagged by crews" in the header. Its drawer has a tech note and an office reply.
-- [ ] **P2-38** The tech posts a "Crew and office" note → it appears in the office drawer within about 1 second, the activity log shows "Marcus Lee (tech)", and no text is sent. *Logic checked automatically Oct 16.*
-- [ ] **P2-39** The tech posts with "Also tell the client" → a "Job update" text appears in the outbox and the drawer's Customer texts, with the tech's first name and no blank placeholders. *Logic checked automatically Oct 16.*
-- [ ] **P2-40** For a Harbourview job, the portal drawer shows the client update but never the internal notes, and has nowhere to write. Another account sees neither. *Logic checked automatically Oct 16.*
-- [ ] **P2-41** The office posts on the same feed → the tech sees it, and it shows as the latest note on the tech's job card.
-- [ ] **P2-42** The tech flags "Waiting on parts" or "Needs office help" → the chip appears on the board, the badge appears in Jobs, and the header count goes up. Clear flag removes it. Close-out also clears it. *Logic checked automatically Oct 16.*
-- [ ] **P2-43** Running late +30 on a scheduled job today → the job moves 30 minutes on the board, and the customer gets a text with the new arrival time. Unticking "Text the customer" sends no text. *Logic checked automatically Oct 16.*
-- [ ] **P2-44** Need more time +2 h on an on-site job that runs into the crew's next job → the drawer shows the overlap warning and the board flags it in red. *Logic checked automatically Oct 16.*
-- [ ] **P2-45** The tech still has no Edit, Delete or payment controls (P1-18). Notes, flag and time buttons are thumb-sized at 375 px, with no sideways scroll.
-- [ ] **P2-46** Reload keeps notes and flags. Reset brings back only the seeded notes. A backup made before Oct 16 still imports. *Logic checked automatically Oct 16.*
+- [x] **P2-37** After Reset, the dispatch board shows 1 job flagged "Parts" and "1 flagged by crews" in the header. Its drawer has a tech note and an office reply. *(passed Oct 16)*
+- [x] **P2-38** The tech posts a "Crew and office" note → it appears in the office drawer within about 1 second, the activity log shows "Marcus Lee (tech)", and no text is sent. *Logic checked automatically Oct 16.* *(passed Oct 16)*
+- [x] **P2-39** The tech posts with "Also tell the client" → a "Job update" text appears in the outbox and the drawer's Customer texts, with the tech's first name and no blank placeholders. *Logic checked automatically Oct 16.* *(passed Oct 16)*
+- [x] **P2-40** For a Harbourview job, the portal drawer shows the client update but never the internal notes, and has nowhere to write. Another account sees neither. *Logic checked automatically Oct 16.* *(passed Oct 16)*
+- [x] **P2-41** The office posts on the same feed → the tech sees it, and it shows as the latest note on the tech's job card. *(passed Oct 16)*
+- [x] **P2-42** The tech flags "Waiting on parts" or "Needs office help" → the chip appears on the board, the badge appears in Jobs, and the header count goes up. Clear flag removes it. Close-out also clears it. *Logic checked automatically Oct 16.* *(passed Oct 16)*
+- [x] **P2-43** Running late +30 on a scheduled job today → the job moves 30 minutes on the board, and the customer gets a text with the new arrival time. Unticking "Text the customer" sends no text. *Logic checked automatically Oct 16.* *(passed Oct 16)*
+- [x] **P2-44** Need more time +2 h on an on-site job that runs into the crew's next job → the drawer shows the overlap warning and the board flags it in red. *Logic checked automatically Oct 16.* *(passed Oct 16)*
+- [x] **P2-45** The tech still has no Edit, Delete or payment controls (P1-18). Notes, flag and time buttons are thumb-sized at 375 px, with no sideways scroll. *(passed Oct 16)*
+- [x] **P2-46** Reload keeps notes and flags. Reset brings back only the seeded notes. A backup made before Oct 16 still imports. *Logic checked automatically Oct 16.* *(passed Oct 16)*
 
 ---
 
-## Phase 3: Client portal (Nov 16 – 22)
+## Phase 3: Client portal (Nov 16 – 22; built Oct 16, 2026)
 
 **Demo-able when done:** a commercial customer checks their SLA.
 
-- [ ] **P3-01** The portal home page shows sites, open visits, visits completed in the last 30 days and % within SLA. The numbers match the office client file for the same account.
-- [ ] **P3-02** The 6-month SLA chart: each month's value matches a manual count from the visit list for one sample month.
-- [ ] **P3-03** The sites list shows every site with open visits and last visit date. Clicking a site filters the visits.
-- [ ] **P3-04** A visit that is in progress shows its live status, for example "En route" after the tech taps "On my way" in another window.
-- [ ] **P3-05** Job report: notes, parts, photos and signature, laid out on clean pages. "Save as PDF" in Chrome and Safari gives a readable file of 1–2 pages with no cut-off content.
-- [ ] **P3-06** Isolation: switching from the school board to Cornerstone changes every number and list, and no Harbourview site names appear anywhere.
+*Logic checked automatically Oct 16* means the rule was verified by script for all 3 accounts, but the screen still needs a click-through before you tick it.
+
+- [ ] **P3-01** The portal home page shows sites, open visits, visits completed in the last 30 days and % within SLA. The numbers match the office client file for the same account. *Logic checked automatically Oct 16 (for example Harbourview: 8 sites, 20 open, 85% within SLA in both).*
+- [ ] **P3-02** The 6-month SLA chart: each month's value matches a manual count from the visit list for one sample month. Hovering a column shows the counts, and the Table switch lists every month. *Logic checked automatically Oct 16: all 6 months, all 3 accounts.*
+- [ ] **P3-03** The sites list shows every site with open visits and last visit date. Clicking a site filters the visits, and "Show all sites" clears it. *Logic checked automatically Oct 16.*
+- [ ] **P3-04** A visit that is in progress shows its live status in "Today at your sites", for example "On the way since…" after the tech taps "On my way" in another window. Bayside Towers' no-heat call shows "Waiting for a crew" and its SLA arrival time.
+- [ ] **P3-05** Job report: notes, parts, photos and signature, laid out on clean pages. "Save as PDF" in Chrome and Safari gives a readable file of 1–2 pages with no cut-off content and none of the app around it. Close out a job with 4 photos and a signature first, since seeded jobs have none. *Content checked automatically Oct 16.*
+- [ ] **P3-06** Isolation: switching from the school board to Cornerstone changes every number and list, and no Harbourview site names appear anywhere. *Logic checked automatically Oct 16.*
 - [ ] **P3-07** Isolation: opening another account's job (by search, or by pasting its job ID) shows nothing.
-- [ ] **P3-08** A client can't change anything: there are no edit, status or payment controls.
-- [ ] **P3-09** The SLA definition is shown in the portal ("Urgent and emergency calls, request to arrival"), and the wording has been agreed.
+- [ ] **P3-08** A client can't change anything: there are no edit, status, note or payment controls. *Logic checked automatically Oct 16.*
+- [ ] **P3-09** The SLA definition is shown in the portal ("Urgent and emergency calls, request to arrival"), and the wording has been agreed. *Shown: checked Oct 16. Wording: needs your OK.*
+- [ ] **P3-10** The SLA chart reads cleanly at 375 px, about 700 px and 1280 px wide: labels don't collide, the tooltip stays on screen, and the chart works with the keyboard (Tab to a month shows its tooltip).
+
+### Checked automatically (Oct 16)
+- [x] **P3-11** Reports leave out prices and internal notes, for both office and client. *(automated)*
+- [x] **P3-12** The office client file shows the same SLA chart as the portal. *(automated)*
+- [x] **P3-13** Phase 2 checks still pass, and the seed still fits the storage budget (2.49 million characters). *(automated)*
 
 ---
 

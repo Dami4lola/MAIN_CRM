@@ -7,6 +7,7 @@ import CloseOutSheet from "./components/CloseOutSheet";
 import Icon from "./components/Icon";
 import JobDrawer from "./components/JobDrawer";
 import JobForm from "./components/JobForm";
+import JobReport from "./components/JobReport";
 import ProfileMenu, { type Identity } from "./components/ProfileMenu";
 import Sidebar, { type NavItem } from "./components/Sidebar";
 import { scopeFor } from "./data/access";
@@ -68,6 +69,7 @@ function App() {
   const [jobForm, setJobForm] = useState<{ jobId?: string; clientId?: string } | null>(null);
   const [clientForm, setClientForm] = useState<{ clientId?: string } | null>(null);
   const [closeOutId, setCloseOutId] = useState<string | null>(null);
+  const [reportId, setReportId] = useState<string | null>(null);
   const toastTimer = useRef<number | undefined>(undefined);
 
   const identity: Identity = currentTech
@@ -87,6 +89,7 @@ function App() {
     setJobForm(null);
     setClientForm(null);
     setCloseOutId(null);
+    setReportId(null);
   }, [roleKey]);
 
   function notify(message: string) {
@@ -167,6 +170,7 @@ function App() {
       return `${job.title} ${job.id} ${job.address} ${owner?.name ?? ""} ${lookup.sites.get(job.siteId)?.name ?? ""} ${crewName} ${contact}`.toLowerCase().includes(query);
     },
     openJob: (id) => setOpenJobId(id),
+    openReport: (id) => setReportId(id),
     openClient(id) {
       if (!isOffice) return;
       navigate({ area: "office", page: "clients", clientId: id });
@@ -202,6 +206,8 @@ function App() {
 
   const drawerJob = visibleJobs.find((job) => job.id === openJobId);
   const closeOutJob = role.kind !== "client" ? visibleJobs.find((job) => job.id === closeOutId && job.status === "On site") : undefined;
+  // Reports come from the role's own jobs, so a pasted or stale job ID from another account shows nothing.
+  const reportJob = visibleJobs.find((job) => job.id === reportId && job.status === "Completed");
   const editingJob = jobs.find((job) => job.id === jobForm?.jobId);
   const editingClient = clients.find((client) => client.id === clientForm?.clientId);
   const firstName = identity.name.split(" ")[0];
@@ -314,6 +320,9 @@ function App() {
 
         {toast && <div className="toast" role="status"><Icon name="check" size={17} />{toast}</div>}
       </div>
+
+      {/* Outside the app shell, so printing can hide everything else. */}
+      {reportJob && <JobReport key={reportJob.id} job={reportJob} onClose={() => setReportId(null)} />}
     </AppContext.Provider>
   );
 }
