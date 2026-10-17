@@ -1,0 +1,10 @@
+{
+  "description": "Streamline job scheduling and progress tracking for handyman services, enhancing efficiency and communication between workers and management.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
